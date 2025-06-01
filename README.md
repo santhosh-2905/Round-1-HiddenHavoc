@@ -1,6 +1,6 @@
 # 🔍 Round 1 – Hidden Havoc
 
-Welcome to **Round 1** of the BLACKBOX Tech Treasure Hunt!
+Welcome to **Round 1** of the **The Final Destination** Treasure Hunt!
 
 Follow the instructions below carefully:
 
