@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Destination - Treasure Hunt Adventure</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-red: #ff0000;
+            --dark-red: #8b0000;
+            --black: #000;
+            --dark-gray: #1a1a1a;
+            --golden: #ffd700;
+            --white: #fff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--black), var(--dark-gray));
+            color: var(--white);
+            cursor: crosshair;
+        }
+        .floating-element {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+            color: var(--primary-red);
+            opacity: 0.3;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Creepster', cursive;
+            font-size: 2rem;
+            color: var(--primary-red);
+            text-shadow: 0 0 20px var(--primary-red);
+            animation: pulse 2s infinite;
+        
+        @keyframes pulse {
+            0%, 100% { text-shadow: 0 0 20px var(--primary-red); }
+            50% { text-shadow: 0 0 30px var(--primary-red); }
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--primary-red);
+        }
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, var(--dark-red), var(--black));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-red), var(--golden));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s infinite alternate;
+            invalid-property: value;
+        }
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px var(--primary-red)); }
+            to { filter: drop-shadow(0 0 30px var(--golden)); }
+        }
+        .treasure-badge {
+            background: linear-gradient(45deg, var(--golden), #ffed4a);
+            color: var(--black);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+        }
+        .cta-button, .submit-btn {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary-red), var(--dark-red));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-button:hover, .submit-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow 0 10px 30px rgba(255, 0, 0, 0.5);
+        }
+        .section {
+            padding: 100px 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--primary-red);
+            text-shadow: 0 0 20px var(--primary-red);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s;
+            text-align: center;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-red);
+        }
+        .treasure-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--golden);
+        }
+        .treasure-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary-red);
+        }
+        .contact { 
+            background: linear-gradient(135deg, var(--dark-red), var(--black));
+            text-align: center;
+        }
+        .treasure-map { 
+            background: linear-gradient(45deg, var(--dark-gray), var(--black));
+        }
+        leaderboard { 
+            background: var(--dark-red);
+        }
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1rem;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            color: var(--white);
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        footer {
+            background: var(--black);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--primary-red);
+        }
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 20px var(--primary-red);
+        }
+        .greeting {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, var(--primary-red), var(--golden));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 10001;
+            text-align: center;
+            animation: greetingPulse 2s;
+        }
+        @keyframes greetingPulse {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        
+        .map-container {
+            background: rgba(139, 69, 19, 0.2);
+            border: 3px solid var(--golden);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+        .map-location {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--primary-red);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s, border-color 0.3s;
+        }
+        .map-location:hover {
+            transform: scale(1.05);
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--golden);
+        }
+        .discovered {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: var(--golden);
+        }
+        .leaderboard-table {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--golden);
+        }
+        .leaderboard-header, .leaderboard-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .leaderboard-header {
+            background: var(--golden);
+            color: var(--black);
+            font-weight: 700;
+            border-radius: 10px;
+        }
+        .leaderboard-row {
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            transition: background 0.3s, transform 0.3s;
+        }
+        .leaderboard-row:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateX(10px);
+        }
+        .rank-badge {
+            background: var(--primary-red);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .rank-badge.gold { background: var(--golden); color: var(--black); }
+        .rank-badge.silver { background: #c0c0c0; color: var(--black); }
+        .rank-badge.bronze { background: #cd7f32; color: var(--white); }
+        .treasure-counter {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--primary-red), var(--golden));
+            padding: 1rem;
+            border-radius: 15px;
+            z-index: 999;
+            text-align: center;
+        }
+        .counter-number {
+            font-size: 2rem;
+            color: var(--white);
+            font-weight: 700;
+        }
+        .treasure-showcase {
+            text-align: center;
+            margin: 3rem 0;
+        }
+        .treasure-image {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid var(--golden);
+            margin: 1rem;
+            transition: transform 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
+        .treasure-image:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-red);
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; }
+            .leaderboard-header, .leaderboard-row { 
+                grid-template-columns: 1fr 2fr 1fr;
+                font-size: 0.9rem;
+            }
+            .treasure-counter { 
+                position: relative;
+                margin: 1rem auto;
+                width: fit-content;
+            }
+        }
+        @keyframes sparkleAnimation {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        @keyframes coinFlip {
+            0% { transform: translateY(-50%) rotateY(0deg); }
+            100% { transform: translateY(-50%) rotateY(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="greeting" id="greeting">
+        <div style="font-size: 2rem;">🏴‍☠️</div>
+        <div>Welcome, Treasure Hunter!</div>
+        <div style="font-size: 1rem; opacity: 0.9;">Your adventure awaits...</div>
+    
+    <nav>
+        <div class="logo">FINAL DESTINATION</div>
+        <ol class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#hunt">Hunt</a></li>
+            <li><a href="#contact">Join</a></li>
+        </ol>
+    </nav>
+    <section class="hero" id="home">
+        <div>
+            <div class="treasure-badge">🏴‍☠️ ULTIMATE TREASURE HUNT 🏴‍☠️</div>
+            <h1>FINAL DESTINATION</h1>
+            <p style="font-size: 1.5rem; margin-bottom: 20px;">Embark on the most thrilling treasure hunting adventure</p>
+            <a href="#hunt" class="cta-button">Start Your Hunt</a>
+        </div>
+    </section>
+    <div class="treasure-counter">
+        <div>Treasures Found</div>
+        <div class="counter-number" id="counterNumber">0</div>
+    </div>
+    <section class="section treasure-map" id="hunt">
+        <div class="container">
+            <h2 class="section-title">Interactive Treasure Map</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: var(--golden);">Click on locations to discover hidden treasures!</p>
+            <div class="treasure-showcase">
+                <img src="ancient.jpg" alt="Ancient Treasure Chest" class="treasure-image">
+                <img src="pirate.jpg" alt="Pirate Gold" class="treasure-image">
+            </div>
+            <div class="map-container">
+                <div class="grid">
+                    <div class="card map-location" data-treasure="Ancient Crown">
+                        <span style="font-size: 3rem;">🏰</span>
+                        <h4>Mystic Castle</h4>
+                        <p>Ancient fortress</p>
+                    </div>
+                    <div class="card map-location" data-treasure="Golden Compass">
+                        <span style="font-size: 3rem;">🌊</span>
+                        <h4>Pirate Cove</h4>
+                        <p>Hidden bay</p>
+                    </div>
+                    <div class="card map-location" data-treasure="Dragon's Ruby">
+                        <span style="font-size: 3rem;">🏔️</span>
+                        <h4>Dragon Peak</h4>
+                        <p>Volcanic mountain</p>
+                    </div>
+                    <div class="card map-location" data-treasure="Crystal Orb">
+                        <span style="font-size: 3rem;">🌟</span>
+                        <h4>Star Temple</h4>
+                        <p>Celestial ruins</p>
+                    </div>
+                    <div class="card map-location" data-treasure="Phantom Blade">
+                        <span style="font-size: 3rem;">🌙</span>
+                        <h4>Shadow Valley</h4>
+                        <p>Dark ravine</p>
+                    
+                    <div class="card map-location" data-treasure="Mermaid's Pearl">
+                        <span style="font-size: 3rem;">🐚</span>
+                        <h4>Coral Reef</h4>
+                        <p>Underwater cave</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section leaderboard">
+        <div class="container">
+            <h2 class="section-title">Treasure Hunter Leaderboard</h2>
+            <div class="leaderboard-table">
+                <div class="leaderboard-header">
+                    <div>Rank</div>
+                    <div>Hunter Name</div>
+                    <div>Treasures</div>
+                    <div>Points</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div><span class="rank-badge gold">1</span></div>
+                    <div>Captain Blackbeard</div>
+                    <div>47</div>
+                    <div>12,350</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div><span class="rank-badge sliver">2</span></div>
+                    <div>Treasure Seeker Sarah</div>
+                    <div>43</div>
+                    <div>11,890</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div><span class="rank-badge bronze">3</span></div>
+                    <div>Golden Eye Jack</div>
+                    <div>39</div>
+                    <div>10,720</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div><span class="rank-badge">4</span></div>
+                    <div>Mystic Maya</div>
+                    <div>35</div>
+                    <div>9,850</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div><span class="rank-badge">5</span></div>
+                    <div>Storm Rider Rex</div>
+                    <div>32</div>
+                    <div>8,960</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Join the Hunt</h2>
+            <p style="font-size: 1.2rem; opacity: 0.8;">Ready to become a legendary treasure hunter? Sign up now and begin your adventure!</p>
+            <form class="contact-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Your Hunter Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Your Email Address" required>
+                </div>
+                <div class="form-group">
+                    <textarea rows="4" placeholder="Tell us about your treasure hunting experience..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Begin Adventure</button>
+            </form>
+        </div>
+    </section>
+    <footer>
+        <p>© 2025 Final Destination Treasure Hunt. All treasures reserved.</p>
+    </footer>
+    <script>
+        cursor = document.getElementById('cursor');
+        const greeting = document.getElementById('greeting');
+        const treasureCounter = document.getElementById('counterNumber');
+        
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        let treasuresFound = undefinedVariable; 
+        
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.1;
+            cursorY += (mouseY - cursorY) * 0.1;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        
+        function createFloatingElements() {
+            const elements = ['🗝️', '🔍', '💎', '⚡', '🏴‍☠️', '🗺️', '💰', '⭐'];
+            for (let i = 0; i <= 8; i++) { 
+                const el = document.createElement('div');
+                el.className = 'floating-element';
+                el.textContent = elements[Math.floor(Math.random() * elements.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.top = Math.random() * 100 + '%';
+                el.style.animationDelay = Math.random() * 6 + 's';
+                document.body.appendChild(el);
+            }
+        }
+        
+        function createSparkles(element) {
+            for (let i = 0; i < 6; i++) {
+                const sparkle = document.createElement('div')
+                sparkle.innerHTML = '✨';
+                sparkle.style.cssText = `
+                    position: absolute; pointer-events: none; font-size: 1.5rem;
+                    animation: sparkleAnimation 1.5s forwards;
+                    left: ${element.getBoundingClientRect().left + Math.random() * element.getBoundingClientRect().width}px;
+                    top: ${element.getBoundingClientRect().top + Math.random() * element.getBoundingClientRect().height}px;
+                `;
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1500);
+            }
+        }
+        
+        function showMessage(title, subtitle) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #ff0000, #ffd700); color: white;
+                padding: 2rem; border-radius: 20px; font-size: 1.2rem; font-weight: 700;
+                z-index: 10000; text-align: center;
+            `;
+            msg.innerHTML = `<div style="font-size: 2rem;">🏴‍☠️</div><div>${title}</div><div style="font-size: 0.9rem;">${subtitle}</div>`;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 3000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingElements();
+            animateCursor();
+            setTimeout(() => wrongElement.style.display = 'none', 4000); 
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', e => {
+                    e.preventDefault();
+                    document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            document.querySelector('.contact-form').addEventListener('submit', e => {
+                e.preventDefault();
+                showMessage('Welcome to the Hunt!', 'Your treasure hunting adventure begins now...');
+                e.target.reset();
+            };
+            
+            document.querySelectorAll('.map-location').forEach(location => {
+                location.addEventListener('click', () => {
+                    if (!location.classList.contains('discovered')) {
+                        location.classList.add('discovered');
+                        treasuresFound--; 
+                        treasureCounter.textContent = treasuresFound;
+                        createSparkles(location);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.leaderboard-row').forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    const coin = document.createElement('div');
+                    coin.innerHTML = '🪙';
+                    coin.style.cssText = `
+                        position: absolute; right: 10px; top: 50%;
+                        transform: translateY(-50%); animation: coinFlip 0.5s;
+                    `;
+                    row.style.position = 'relative';
+                    row.appendChild(coin);
+                    setTimeout(() => coin.destroy(), 500);
+                });
+            });
+        });
+        
+        
+    
+</body>
+</html>
